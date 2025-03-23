@@ -1,0 +1,13 @@
+# Proyecto Correlativas
+## Propósito
+<div align="justify"> Este proyecto surgió a partir de haber notado que otras universidades tenían mapas visuales con las materias de sus carreras y flechas indicando correlatividades, mientras que esto no existía en mi faultad. </div>
+<div align="justify"> En un principio, el único propósito era poder visualizar las correlatividades, pero en el transcurso del desarrollo de la página web, fueron surgiendo nuevas funciones con el objetivo de hacer más fácil el seguimiento de las materias correlativas, ya que en cuanto a las materias inmeditamente anteriores, hay que tener la cursada aprobada, pero cuando se trata de las materias que están antes de las inmediatamente anteriores, hay que tener el final aprobado (es decir, la materia aprobada). Al agregar la posibilidad de destacar con el click de un botón las materias "inmediatas" y las "no inmediatas" (ya sea hacia adelante o hacia atrás), <b> esto hace que sea mucho más fácil ver a qué materias hay que darles prioridad al momento de rendir finales. </b></div>
+
+## ¿Qué significa que una materia sea elegida, inmediata, anterior y posterior?
+<div align="justify"> Una <b> materia elegida </b> es aquella que el usuario ha selecciono haciendo click sobre ella.</div>
+<div align="justify"> Una <b> materia inmediata </b> es aquella que está conectada por una flecha a la materia en elegida, ya sea que una flecha suya esté apuntando a esta materia elegida o que está recibiendo una flecha saliente de la materia elegida. Para poder cursar una materia hay que tener las cursadas aprobadas de sus materias inmediatamente anteriores (y los finales de todas las anteriores a estas). Ejemplo:
+<ul> Elegimos Análsis Matemático 2
+<li> Para cursar Análisis Matemático 2, hay que tener aprobada la cursada de Análisis Matemático 1 (entre otras). En este caso, Análisis Matemático 1 es una de las materias inmediatamente anteriores a la materia elegida (Análisis Matemárico 1). </li>
+<li> Para cursar Análisis Matemático 3, hay que tener aprobada la cursada de Análisis Matemático 2 (entre otras). En este caso, Análisis Matemático 3 es una de las materias inmediatamente posteriores a la materia elegida (Análisis Matemárico 1). </li></ul></div>
+<div align="justify"> Una <b> materia anterior </b> es una materia que hay que haber aprobado su cursada o su cursada y final (dependiendo de si es inmediata o no) para poder cursar la materia elegida. </div>
+<div align="justify"> Una <b> materia posterior </b> es una materia que para poder cursarla hay que haber aprobado la cursada o la cursada y final (dependiendo de si es inmediata o no) de la materia elegida. </div>
