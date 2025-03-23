@@ -6,7 +6,7 @@
 ## ¿Qué significa que una materia sea elegida, inmediata, anterior y posterior?
 <div align="justify"> Una <b> materia elegida </b> es aquella que el usuario ha selecciono haciendo click sobre ella.</div>
 <div align="justify"> Una <b> materia inmediata </b> es aquella que está conectada por una flecha a la materia en elegida, ya sea que una flecha suya esté apuntando a esta materia elegida o que está recibiendo una flecha saliente de la materia elegida. Para poder cursar una materia hay que tener las cursadas aprobadas de sus materias inmediatamente anteriores (y los finales de todas las anteriores a estas). Ejemplo:
-<ul> Elegimos Análsis Matemático 2
+<ul> Elegimos Análisis Matemático 2
 <li> Para cursar Análisis Matemático 2, hay que tener aprobada la cursada de Análisis Matemático 1 (entre otras). En este caso, Análisis Matemático 1 es una de las materias inmediatamente anteriores a la materia elegida (Análisis Matemárico 1). </li>
 <li> Para cursar Análisis Matemático 3, hay que tener aprobada la cursada de Análisis Matemático 2 (entre otras). En este caso, Análisis Matemático 3 es una de las materias inmediatamente posteriores a la materia elegida (Análisis Matemárico 1). </li></ul></div>
 <div align="justify"> Una <b> materia anterior </b> es una materia que hay que haber aprobado su cursada o su cursada y final (dependiendo de si es inmediata o no) para poder cursar la materia elegida. </div>
