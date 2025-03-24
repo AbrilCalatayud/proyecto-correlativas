@@ -42,9 +42,14 @@
 <script src="https://unpkg.com/cytoscape@3.19.1/dist/cytoscape.min.js"></script>
 
 <script>
+    // Get the parameters from the URL
+    let params = new URLSearchParams(window.location.search);
+    let career = params.get("carrera");
+    let grafoPath = `data-grafos/data-${career}.cyjs`;
+    
     document.addEventListener('DOMContentLoaded', function () {
         // Fetch the cyjs file from the same directory
-        fetch('data-grafos/data-ingenieria-en-informatica-2015.cyjs')
+        fetch(grafoPath)
             .then(response => response.json())
             .then(cyjsData => {
                 const cy = cytoscape({
@@ -265,7 +270,7 @@
 });
 </script>
 <center>
-<h2>GRAFO DE LAS CORRELATIVAS DEL PLAN DE ESTUDIOS DE ING. EN INFORMÁTICA 2015</h2>
+<h2>GRAFO DE LAS CORRELATIVAS DEL PLAN DE ESTUDIOS</h2>
 <p>Instrucciones para computadora (en el celular existen las mismas funciones):</p>
 <p>Puede hacer <b>zoom</b> con la rueda del mouse, hacia adelante para acercarse y hacia atrás para alejarse.</p>
 <p>Puede <b>deslizarse</b> agarrando el grafo con el click izquierdo y manteniendolo mientras lo arrastra.</p>
