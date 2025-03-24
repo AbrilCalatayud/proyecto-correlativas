@@ -16,7 +16,7 @@
             <option value="otra-carrera">Otra carrera</option>
             <!-- Add more career options as needed -->
         </select>
-        <button onclick="showGraphs()">Ver Grafo</button>
+        <button onclick="showGraphs()">Ver Disponibilidad de Grafo</button>
     </div>
 
     <div class="graph-list" id="graphList"></div>
@@ -30,7 +30,7 @@
                 graphList.style.display = 'block';
                 var enlace = document.createElement("a");
                 enlace.href = `grafo.html?carrera=${career}`;
-                enlace.textContent = "Grafos disponibles";
+                enlace.textContent = "Ver Grafo";
                 document.getElementById("graphList").appendChild(enlace);
             } else {
                 alert('No hay grafos disponibles para su carrera');
