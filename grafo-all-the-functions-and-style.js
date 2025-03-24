@@ -1,0 +1,226 @@
+// Get the parameters from the URL
+let params = new URLSearchParams(window.location.search);
+let career = params.get("carrera");
+let grafoPath = `data-grafos/data-${career}.cyjs`;
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Fetch the cyjs file from the same directory
+    fetch(grafoPath)
+        .then(response => response.json())
+        .then(cyjsData => {
+            const cy = cytoscape({
+                container: document.getElementById('cy'),
+                elements: cyjsData.elements,  // Use the elements from the cyjs file
+                style: [
+                    {
+                        selector: 'node',
+                        style: {
+                            'background-color': '#666',
+                            'label': 'data(name)',
+                            'text-wrap': 'wrap',
+                            'text-max-width': '120px'
+                        }
+                    },
+                    {
+                        selector: 'edge',
+                        style: {
+                            'width': 2,
+                            'line-color': '#ccc',
+                            'target-arrow-color': '#ccc',
+                            'target-arrow-shape': 'triangle',
+                            'curve-style': 'bezier'
+                        }
+                    },
+                    {
+                        selector: '.highlighted-prev',
+                        style: {
+                            'background-color': '#FF4136', // Red for previous nodes
+                            'border-width': '2px',
+                            'border-color': '#FF4136'
+                        }
+                    },
+                    {
+                        selector: '.highlighted-next',
+                        style: {
+                            'background-color': '#0074D9', // Blue for next nodes
+                            'border-width': '2px',
+                            'border-color': '#0074D9'
+                        }
+                    },
+                    {
+                        selector: '.highlighted',
+                        style: {
+                            'background-color': '#FFFF00', // Yellow for selected node
+                            'border-width': '2px',
+                            'border-color': '#FFFF00'
+                        }
+                    }
+                ],
+                layout: {
+                    name: 'preset',
+                }
+            });
+
+            const nodeDropdown = document.getElementById('nodeDropdown');
+            const nodes = cy.nodes().toArray();
+
+            // Create an array of options
+            const options = nodes.map(node => {
+                return {
+                    value: node.id(),
+                    text: node.data('name')
+                };
+            });
+
+            // Sort the options array alphabetically by the text
+            options.sort((a, b) => a.text.localeCompare(b.text));
+
+            // Add sorted options to the dropdown
+            options.forEach(option => {
+                const opt = document.createElement('option');
+                opt.value = option.value;
+                opt.textContent = option.text;
+                nodeDropdown.appendChild(opt);
+            });
+
+            // Handle node selection from dropdown
+            nodeDropdown.addEventListener('change', function () {
+                const selectedNodeId = this.value;
+                if (selectedNodeId) {
+                    const node = cy.getElementById(selectedNodeId);
+                    cy.nodes().removeClass('highlighted');
+                    node.addClass('highlighted');
+                    cy.center(node);
+                } else {
+                    cy.nodes().removeClass('highlighted');
+                }
+            });
+
+            // Clear highlights on clicking elsewhere
+            cy.on('tap', function (event) {
+                if (event.target === cy) { // Clicked outside any node
+                    cy.nodes().removeClass('highlighted');
+                    dropdown.value = ''; // Clear dropdown selection
+                }
+            });
+
+            let selectedNode = null;
+
+            cy.on('tap', function (event) {
+                const contextMenu = document.getElementById('contextMenu');
+                contextMenu.style.display = 'none';
+                cy.nodes().removeClass('highlighted-prev highlighted-next');
+            });
+
+            cy.on('tap', 'node', function (event) {
+                event.stopPropagation();
+                const node = event.target;
+                selectedNode = node;
+                const contextMenu = document.getElementById('contextMenu');
+                contextMenu.style.left = `${event.renderedPosition.x}px`;
+                contextMenu.style.top = `${event.renderedPosition.y}px`;
+                contextMenu.style.display = 'block';
+            });
+
+            function highlightNodes(nodes, highlightClass) {
+                // First, remove all previous highlights
+                cy.nodes().removeClass('highlighted-prev highlighted-next');
+                
+                // Then, add highlights to the nodes passed in the function
+                nodes.forEach(node => {
+                    if (node !== selectedNode) { // Exclude the selected node itself
+                        node.addClass(highlightClass);
+                    }
+                });
+            }
+
+            function collectConnectedNodes(node, direction, immediateOnly) {
+                let nodesToHighlight = [];
+                let queue = [node];
+                let visitedNodes = new Set();
+                let depth = 0;
+                
+                while (queue.length > 0) {
+                    let currentLevelSize = queue.length;
+                    let nextQueue = [];
+
+                    for (let i = 0; i < currentLevelSize; i++) {
+                        let currentNode = queue[i];
+                        if (visitedNodes.has(currentNode.id())) continue;
+                        visitedNodes.add(currentNode.id());
+                        
+                    let connectedNodes;
+                    if (direction === 'previo') {
+                        connectedNodes = currentNode.incomers('node');
+                    } else if (direction === 'posterior') {
+                        connectedNodes = currentNode.outgoers('node');
+                    }
+
+                    if (immediateOnly) {
+                        // Push only the direct connected nodes
+                        connectedNodes.forEach(connectedNode => {
+                            if (!visitedNodes.has(connectedNode.id())) {
+                                nodesToHighlight.push(connectedNode);
+                            }
+                        });
+                    } else {
+                        // Push connected nodes to the queue for further exploration
+                        connectedNodes.forEach(connectedNode => {
+                            if (!visitedNodes.has(connectedNode.id())) {
+                                nextQueue.push(connectedNode);
+                            }
+                        });
+                        nodesToHighlight.push(currentNode); // Include the current node as well
+                    }
+                }
+
+                if (immediateOnly) {
+                    // Only highlight nodes at the current level
+                    return nodesToHighlight;
+                } else {
+                    queue = nextQueue;
+                }
+                depth++;
+            }  
+            return nodesToHighlight;
+    }
+
+    document.getElementById('immediatePrevio').onclick = function () {
+        if (selectedNode) {
+            const nodes = collectConnectedNodes(selectedNode, 'previo', true);
+            highlightNodes(nodes, 'highlighted-prev');
+        }
+    };
+
+    document.getElementById('allPrevio').onclick = function () {
+        if (selectedNode) {
+            const nodes = collectConnectedNodes(selectedNode, 'previo', false);
+            highlightNodes(nodes, 'highlighted-prev');
+        }
+    };
+    
+    document.getElementById('immediatePosterior').onclick = function () {
+        if (selectedNode) {
+            const nodes = collectConnectedNodes(selectedNode, 'posterior', true);
+            highlightNodes(nodes, 'highlighted-next');
+        }
+    };
+    
+    document.getElementById('allPosterior').onclick = function () {
+        if (selectedNode) {
+            const nodes = collectConnectedNodes(selectedNode, 'posterior', false);
+            highlightNodes(nodes, 'highlighted-next');
+        }
+    };
+
+    // Smooth zoom adjustment
+    cy.on('wheel', function (event) {
+        event.preventDefault();
+        const zoomLevel = cy.zoom();
+        const zoomFactor = 0.20; // Adjust this value for finer control
+        const newZoomLevel = event.originalEvent.deltaY > 0 ? zoomLevel / zoomFactor : zoomLevel * zoomFactor;
+        cy.zoom({ level: newZoomLevel });
+    });
+})
+.catch(error => console.error('Error loading the cyjs data:', error));
+});
