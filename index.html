@@ -12,26 +12,26 @@
         <label for="career">Elija su carrera:</label>
         <select id="career">
             <option value="">--Elija su carrera--</option>
-            <option value="informatica">Ingeniería en Informática</option>
-            <option value="other-carrera">Otra carrera</option>
+            <option value="ingenieria-informatica-2018">Ingeniería Informática 2018</option>
+            <option value="otra-carrera">Otra carrera</option>
             <!-- Add more career options as needed -->
         </select>
         <button onclick="showGraphs()">Mostrar grafos disponibles</button>
     </div>
 
-    <div class="graph-list" id="graphList">
-        <h2>Grafos disponibles</h2>
-        <a href="grafo-ingenieria-en-informatica-2015.html">Grafo Correlativas - Ingeniería en Informática - 2015</a>
-        <!-- Add more graph links as needed -->
-    </div>
+    <div class="graph-list" id="graphList"></div>
 
     <script>
         function showGraphs() {
             var career = document.getElementById('career').value;
             var graphList = document.getElementById('graphList');
             
-            if (career === "informatica") {
+            if (career === "ingenieria-informatica-2018") {
                 graphList.style.display = 'block';
+                var enlace = document.createElement("a");
+                enlace.href = `grafo.html?carrera=${career}`;
+                enlace.textContent = "Grafos disponibles";
+                document.getElementById("graphList").appendChild(enlace);
             } else {
                 alert('No hay grafos disponibles para su carrera');
                 graphList.style.display = 'none';
